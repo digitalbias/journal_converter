@@ -9,7 +9,11 @@ defmodule CliTest do
     assert parse_args(["--help", "anything"]) == :help
   end
 
-  test "one value returned if one given" do
-    assert parse_args(["filename"]) == { "filename" }
+  test "filename option passed" do
+    assert parse_args(["-f", "filename"]) == { :file, "filename" }
+  end
+
+  test "directory option passed" do
+    assert parse_args(["-d", "filename"]) == { :directory, "filename" }
   end
 end
