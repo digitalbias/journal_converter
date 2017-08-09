@@ -3,7 +3,7 @@ defmodule JournalConverter.Converter do
     contents = File.read!(filename)
     { :ok, date } = filename_to_date(filename)
     new_contents = put_date_into_file(date, contents)
-    File.write!(filename <> ".converted", new_contents)
+    File.write!(filename <> ".day_one.txt", new_contents)
   end
 
   def convert_directory(directory_name) do
@@ -20,8 +20,10 @@ defmodule JournalConverter.Converter do
   end
 
   def put_date_into_file(date, contents) do
-    "\tDate: " <> Date.to_string(date) <> "\n\n" <> contents
+    "\tDate: " <> format_date(date) <> " at 5:00:00 AM MDT\n\n" <> contents
+  end
+
+  def format_date(date) do
+    Timex.format!(date, "%B %d, %Y", :strftime)
   end
 end
-
-	# Date:	August 5, 2017 at 5:06:39 PM MDT
