@@ -1,15 +1,23 @@
 defmodule JournalConverter.Converter do
   def convert(filename) do
     if File.dir?(filename) do
-      files = File.ls!(filename)
-
+      File.ls!(filename)
+      |>Enum.map(&convert(Path.expand(filename) <> "/" <> &1))
     else
-      { :ok, date }    = filename_to_date(filename)
-
-      File.read!(filename)
-      |> put_date_into_file(date)
-      |> write_file(filename)
+      cond do
+        Path.extname(filename) == ".txt" -> update_file(Path.expand(filename))
+        true -> filename
+      end
     end
+  end
+
+  defp update_file(filename) do
+    IO.puts "updating: " <> Path.expand(filename)
+    { :ok, date }    = filename_to_date(filename)
+
+    File.read!(filename)
+    |> put_date_into_file(date)
+    |> write_file(filename)
   end
 
   defp write_file(contents, filename) do
@@ -30,11 +38,9 @@ defmodule JournalConverter.Converter do
   end
 
   defp filename_to_date(filename) do
-    filename_path = Path.expand(filename)
-    |> Path.dirname()
+    filename_path = Path.dirname(filename)
 
-    Path.expand(filename)
-    |> String.replace(filename_path, "")
+    String.replace(filename, filename_path, "")
     |> String.replace("/", "")
     |> String.replace(".md.txt", "")
     |> String.replace(".", "-")
