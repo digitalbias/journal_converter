@@ -19,13 +19,11 @@ defmodule JournalConverter.CLI do
   """
   def parse_args(argv) do
     parse = OptionParser.parse(argv, switches: [help: :boolean,
-                                                file: :boolean,
-                                                directory: :boolean],
-                                     aliases:  [h: :help, f: :file, d: :directory])
+                                                file: :boolean],
+                                     aliases:  [h: :help, f: :file])
     case parse do
       { [ help: true ],                       _, _ } -> :help
       { [ file: true ],            [ filename ], _ } -> { :file, filename }
-      { [ directory: true ], [ directory_name ], _ } -> { :directory, directory_name }
       _ -> :help
     end
   end
@@ -38,10 +36,6 @@ defmodule JournalConverter.CLI do
   end
 
   def process({:file, filename}) do
-    JournalConverter.Converter.convert_file(filename)
-  end
-
-  def process({:directory, directory_name}) do
-    JournalConverter.Converter.convert_directory(directory_name)
+    JournalConverter.Converter.convert(filename)
   end
 end
