@@ -13,8 +13,13 @@ defmodule JournalConverter.Converter do
 
   defp update_file(filename) do
     IO.puts "updating: " <> Path.expand(filename)
-    { :ok, date }    = filename_to_date(filename)
+    case filename_to_date(filename) do
+      { :ok, date } -> create_day_one_file(filename, date)
+      { :error, _} -> IO.puts "Skipping invalid file:" <> filename
+    end
+  end
 
+  defp create_day_one_file(filename, date) do
     File.read!(filename)
     |> put_date_into_file(date)
     |> write_file(filename)
