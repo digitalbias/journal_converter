@@ -18,24 +18,28 @@ defmodule JournalConverter.CLI do
   Return a new file (or directory of files) with `_day1` at the end, or help if help was given.
   """
   def parse_args(argv) do
-    parse = OptionParser.parse(argv, switches: [help: :boolean,
-                                                file: :boolean],
-                                     aliases:  [h: :help, f: :file])
-    case parse do
+    options = OptionParser.parse(argv, switches: [help: :boolean,
+                                                file: :boolean,
+                                                format: :string
+                                                ],
+                                     aliases:  [h: :help, f: :file, m: :format])
+    case options do
       { [ help: true ],                       _, _ } -> :help
-      { [ file: true ],            [ filename ], _ } -> { :file, filename }
+      { [ file: true ],            [ filename ], _ } -> { :file, filename, options }
       _ -> :help
     end
   end
 
   def process(:help) do
     IO.puts """
-    usage: journal_converter -f <filename>| -d <directory>
+    usage: journal_converter -m <format> -f <filename>| -d <directory>
+       valid formats are : "txt" for text documents and "json" for JSON documents
     """
     System.halt(0)
   end
 
-  def process({:file, filename}) do
-    JournalConverter.Converter.convert(filename)
+  def process({:file, filename, options}) do
+    # IO.puts options
+    JournalConverter.Converter.convert(filename, 'json')
   end
 end
