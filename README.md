@@ -10,4 +10,9 @@ For example, the journal entry for July 1st of 2017 would have a file name of `2
 
 # How to Run this
 
-From a command line type: `mix run -e 'JournalConverter.CLI.run(["-f", "/Users/david.c.mitchell/Dropbox/PlainText/Journal"])'`
+1. Install the dependencies:
+   1. Elixir
+   2. mix
+   3. Run `mix deps.get` from the command-line
+2. Copy the `.env.sample` to `.env` and update the JOURNAL_DIRECTORY variable to the directory with your markdown files in it
+3. From a command line type: `make`
